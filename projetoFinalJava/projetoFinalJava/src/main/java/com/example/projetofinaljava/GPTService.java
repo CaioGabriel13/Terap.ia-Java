@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class GPTService {
-    private static final String API_KEY = "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"; // Replace with your key
+    private static final String API_KEY = "api-key"; // Digite sua chave api aqui
     private static final String ENDPOINT = "https://api.openai.com/v1/chat/completions";
 
     public String getGPTResponse(List<Map<String, String>> messages) {
