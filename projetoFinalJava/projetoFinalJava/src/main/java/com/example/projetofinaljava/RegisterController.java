@@ -1,0 +1,104 @@
+package com.example.projetofinaljava;
+
+import javafx.event.ActionEvent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class RegisterController {
+
+    private RegisterView registerView;
+    private UserStore userStore = new UserStore();
+    private Stage primaryStage;
+
+    public RegisterController(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        this.registerView = new RegisterView();
+        attachEventHandlers();
+    }
+
+    public void setRegisterView(RegisterView registerView) {
+        this.registerView = registerView;
+        attachEventHandlers();
+    }
+
+    private void attachEventHandlers() {
+        registerView.getRegisterButton().setOnAction(this::onRegisterButtonClick);
+        registerView.getBackButton().setOnAction(this::onBackButtonClick);
+    }
+
+    private void onRegisterButtonClick(ActionEvent event) {
+        String username = registerView.getUsernameField().getText().trim();
+        String password = registerView.getPasswordField().getText();
+
+        // Verifica campos vazios
+        if (username.isEmpty() || password.isEmpty()) {
+            registerView.getErrorLabel().setText("Preencha todos os campos.");
+            return;
+        }
+
+        // Validação de segurança da senha
+        String passwordError = validatePassword(password);
+        if (passwordError != null) {
+            registerView.getErrorLabel().setText(passwordError);
+            return;
+        }
+
+        // Tenta cadastrar usuário
+        if (userStore.addUser(new User(username, password))) {
+            goToChatbot(new User(username, password));
+        } else {
+            registerView.getErrorLabel().setText("Usuário já existe.");
+        }
+    }
+
+    private void onBackButtonClick(ActionEvent event) {
+        goToLogin();
+    }
+
+    private void goToChatbot(User user) {
+        ChatbotView chatbotView = new ChatbotView();
+        ChatbotController chatbotController = new ChatbotController(primaryStage, user);
+        chatbotController.setChatbotView(chatbotView);
+        primaryStage.setScene(new Scene(chatbotView));
+        primaryStage.setTitle("Chatbot");
+    }
+
+    private void goToLogin() {
+        LoginView loginView = new LoginView();
+        LoginController loginController = new LoginController(primaryStage);
+        // No need to set loginView explicitly here as it's created in the controller's constructor
+        primaryStage.setScene(new Scene(loginView));
+        primaryStage.setTitle("Login");
+    }
+
+    /**
+     * Verifica se a senha atende aos critérios de segurança:
+     * - Pelo menos 8 caracteres
+     * - Pelo menos uma letra minúscula
+     * - Pelo menos uma letra maiúscula
+     * - Pelo menos um dígito
+     * - Pelo menos um caractere especial (não letra e não dígito)
+     *
+     * Retorna null se a senha for válida; caso contrário, retorna a mensagem de erro.
+     */
+    private String validatePassword(String password) {
+        if (password.length() < 8) {
+            return "Senha deve ter ao menos 8 caracteres.";
+        }
+        if (!password.chars().anyMatch(Character::isLowerCase)) {
+            return "Senha deve conter ao menos uma letra minúscula.";
+        }
+        if (!password.chars().anyMatch(Character::isUpperCase)) {
+            return "Senha deve conter ao menos uma letra maiúscula.";
+        }
+        if (!password.chars().anyMatch(Character::isDigit)) {
+            return "Senha deve conter ao menos um dígito.";
+        }
+        if (password.chars().allMatch(Character::isLetterOrDigit)) {
+            return "Senha deve conter ao menos um caractere especial.";
+        }
+        return null;
+    }
+}
+
+
