@@ -8,9 +8,10 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
-        LoginView loginView = new LoginView();
+        // Criar o controlador primeiro
         LoginController loginController = new LoginController(primaryStage);
-        // No need to set loginView explicitly here as it's created in the controller's constructor
+        // Usar a view gerenciada pelo controlador
+        LoginView loginView = loginController.getLoginView();
         stage.setTitle("Login");
         stage.setScene(new Scene(loginView));
         stage.show();
