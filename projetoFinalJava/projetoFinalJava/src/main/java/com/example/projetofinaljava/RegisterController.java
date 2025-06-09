@@ -2,6 +2,7 @@ package com.example.projetofinaljava;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class RegisterController {
@@ -11,15 +12,28 @@ public class RegisterController {
     private Stage primaryStage;
 
     public RegisterController(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.registerView = new RegisterView();
-        attachEventHandlers();
+        this.primaryStage  = primaryStage;
+        this.registerView  = new RegisterView();
+
+        //  ← liga o botão “Voltar” para navegar de volta ao login
+        registerView.getBackButton().setOnAction(e -> goToLogin());
+
+        // se ainda não estiver fazendo aqui:
+        primaryStage.setScene(new Scene(registerView));
+        primaryStage.setTitle("Cadastro");
+        primaryStage.show();
     }
 
     public void setRegisterView(RegisterView registerView) {
         this.registerView = registerView;
-        attachEventHandlers();
     }
+
+    private void navigateTo(AnchorPane view, String title) {
+        Scene scene = new Scene(view);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(title);
+    }
+
 
     private void attachEventHandlers() {
         registerView.getRegisterButton().setOnAction(this::onRegisterButtonClick);
@@ -64,12 +78,15 @@ public class RegisterController {
     }
 
     private void goToLogin() {
-        LoginView loginView = new LoginView();
+        // instancia o controller de login (que já seta a view)
         LoginController loginController = new LoginController(primaryStage);
-        // No need to set loginView explicitly here as it's created in the controller's constructor
-        primaryStage.setScene(new Scene(loginView));
+
+        // pega a view do login e troca a cena
+        primaryStage.setScene(new Scene(loginController.getLoginView()));
         primaryStage.setTitle("Login");
     }
+
+
 
     /**
      * Verifica se a senha atende aos critérios de segurança:

@@ -2,6 +2,7 @@ package com.example.projetofinaljava;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class LoginController {
@@ -12,20 +13,26 @@ public class LoginController {
 
     public LoginController(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.loginView = new LoginView();
-        attachEventHandlers();
+        this.loginView    = new LoginView();
+        // só configure handlers:
+        loginView.getLoginButton().setOnAction(e -> handleLogin());
+        loginView.getRegisterButton().setOnAction(e -> goToRegister());
+        // NÃO tocar no primaryStage aqui!
     }
+
+    private void navigateTo(AnchorPane view, String title) {
+        Scene scene = new Scene(view);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(title);
+    }
+
 
     public LoginView getLoginView() {
         return loginView;
     }
 
-    private void attachEventHandlers() {
-        loginView.getLoginButton().setOnAction(this::onLoginButtonClick);
-        loginView.getRegisterButton().setOnAction(this::onRegisterButtonClick);
-    }
 
-    private void onLoginButtonClick(ActionEvent event) {
+    private void handleLogin() {
         String username = loginView.getUsernameField().getText();
         String password = loginView.getPasswordField().getText();
         User user = userStore.getUser(username);
@@ -35,6 +42,12 @@ public class LoginController {
             loginView.getErrorLabel().setText("Usuário ou senha incorretos");
         }
     }
+
+    private void attachEventHandlers() {
+        loginView.getLoginButton().setOnAction(e -> handleLogin());
+        loginView.getRegisterButton().setOnAction(this::onRegisterButtonClick);
+    }
+
 
     private void onRegisterButtonClick(ActionEvent event) {
         goToRegister();
@@ -49,12 +62,15 @@ public class LoginController {
     }
 
     private void goToRegister() {
-        RegisterView registerView = new RegisterView();
+        // cria a view e o controller de cadastro
+        RegisterView       registerView       = new RegisterView();
         RegisterController registerController = new RegisterController(primaryStage);
-        registerController.setRegisterView(registerView);
+
+        // troca a cena
         primaryStage.setScene(new Scene(registerView));
         primaryStage.setTitle("Cadastro");
     }
+
 }
 
 

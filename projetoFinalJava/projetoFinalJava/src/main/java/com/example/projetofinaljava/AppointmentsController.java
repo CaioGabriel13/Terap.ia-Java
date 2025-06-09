@@ -35,9 +35,11 @@ public class AppointmentsController {
     }
 
     private void navigateTo(AnchorPane view, String title) {
-        primaryStage.setScene(new Scene(view));
+        Scene scene = new Scene(view);
+        primaryStage.setScene(scene);
         primaryStage.setTitle(title);
     }
+
 
     private void handleChatbot(ActionEvent event) {
         ChatbotView chatbotView = new ChatbotView();

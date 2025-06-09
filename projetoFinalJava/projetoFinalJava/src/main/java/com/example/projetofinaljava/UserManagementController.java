@@ -146,9 +146,11 @@ public class UserManagementController {
     }
 
     private void navigateTo(AnchorPane view, String title) {
-        primaryStage.setScene(new Scene(view));
+        Scene scene = new Scene(view);
+        primaryStage.setScene(scene);
         primaryStage.setTitle(title);
     }
+
 
     private void handleChatbot(ActionEvent event) { navigateTo(new ChatbotView(), "Chatbot"); }
     private void handleAds(ActionEvent event) { navigateTo(new AdsView(), "Anúncios"); }

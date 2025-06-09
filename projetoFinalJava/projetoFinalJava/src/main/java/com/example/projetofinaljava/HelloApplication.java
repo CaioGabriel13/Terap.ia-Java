@@ -6,14 +6,11 @@ import javafx.stage.Stage;
 
 public class HelloApplication extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
-        this.primaryStage = stage;
-        // Criar o controlador primeiro
-        LoginController loginController = new LoginController(primaryStage);
-        // Usar a view gerenciada pelo controlador
-        LoginView loginView = loginController.getLoginView();
+    public void start(Stage stage) {
+        LoginController loginController = new LoginController(stage);
+        Scene loginScene = new Scene(loginController.getLoginView());
         stage.setTitle("Login");
-        stage.setScene(new Scene(loginView));
+        stage.setScene(loginScene);
         stage.show();
     }
 
